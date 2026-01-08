@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Publicar Grupo{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-4">➕ Publica tu Grupo de Telegram</h2>
+                <form method="POST">
+    <div class="mb-3">
+        <label class="form-label">Nombre del grupo</label>
+        <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Enlace de invitación</label>
+        <input type="url" name="link" class="form-control" placeholder="https://t.me/tugrupo" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Categoría</label>
+        <select name="category" class="form-select" required>
+            <option value="General">General</option>
+            <option value="Crypto">Crypto / Trading</option>
+            <option value="Memes">Memes / Humor</option>
+            <option value="Noticias">Noticias</option>
+            <option value="Juegos">Juegos / Gaming</option>
+            <option value="Tecnología">Tecnología</option>
+            <option value="Música">Música</option>
+            <option value="Cine">Cine / Series</option>
+            <option value="Adulto">Adulto (+18)</option>
+        </select>
+    </div>
+    
+<div class="mb-3">
+    <label class="form-label">País del grupo (opcional)</label>
+    <select name="country" class="form-select">
+        {% set countries = load_json(url_for('static', filename='json/countries.json')) %}
+        {% for country in countries %}
+            <option value="{{ country.name }}">{{ country.emoji }} {{ country.name }}</option>
+        {% endfor %}
+    </select>
+    <small class="text-muted">Si no eliges, aparecerá como Global</small>
+</div>
+    <div class="mb-3">
+        <label class="form-label">Descripción (¿por qué deberían unirse?)</label>
+        <textarea name="description" class="form-control" rows="5" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Tu correo electrónico</label>
+        <input type="email" name="email" class="form-control" required>
+    </div>
+
+    <!-- reCAPTCHA -->
+    <div class="text-center mb-4">
+        <div class="g-recaptcha" data-sitekey="{{ config.RECAPTCHA_SITE_KEY }}"></div>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-lg px-5">Enviar para aprobación</button>
+    </div>
+</form>
+
+<!-- Script de reCAPTCHA (al final del body en base.html o aquí) -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

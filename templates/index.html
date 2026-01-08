@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Grupos Telegram Pro{% endblock %}
+
+{% block content %}
+<!-- Barra de búsqueda -->
+<div class="text-center mb-4">
+    <form method="GET" action="{{ url_for('index') }}" class="d-inline-block">
+        <div class="input-group" style="max-width: 500px;">
+            <input type="text" name="q" class="form-control" placeholder="Buscar grupos..."
+                value="{{ request.args.get('q', '') }}">
+            <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+        </div>
+    </form>
+</div>
+
+<!-- Filtros de categoría -->
+<div class="text-center mb-4">
+    <div class="btn-group" role="group" aria-label="Filtros de categoría">
+        <a href="{{ url_for('index') }}" class="btn btn-outline-light {% if not category %}active{% endif %}">Todos</a>
+        <a href="{{ url_for('index', category='Crypto') }}" class="btn btn-outline-light {% if category == 'Crypto' %}active{% endif %}">Crypto</a>
+        <a href="{{ url_for('index', category='Memes') }}" class="btn btn-outline-light {% if category == 'Memes' %}active{% endif %}">Memes</a>
+        <a href="{{ url_for('index', category='Noticias') }}" class="btn btn-outline-light {% if category == 'Noticias' %}active{% endif %}">Noticias</a>
+        <a href="{{ url_for('index', category='Juegos') }}" class="btn btn-outline-light {% if category == 'Juegos' %}active{% endif %}">Juegos</a>
+        <a href="{{ url_for('index', category='Tecnología') }}" class="btn btn-outline-light {% if category == 'Tecnología' %}active{% endif %}">Tecnología</a>
+        <a href="{{ url_for('index', category='Música') }}" class="btn btn-outline-light {% if category == 'Música' %}active{% endif %}">Música</a>
+        <a href="{{ url_for('index', category='Cine') }}" class="btn btn-outline-light {% if category == 'Cine' %}active{% endif %}">Cine</a>
+        <a href="{{ url_for('index', category='Adulto') }}" class="btn btn-outline-light {% if category == 'Adulto' %}active{% endif %}">Adulto</a>
+        <a href="{{ url_for('index', category='General') }}" class="btn btn-outline-light {% if category == 'General' %}active{% endif %}">General</a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col text-center">
+        <h1 class="display-4 text-white fw-bold">🚀 Grupos de Telegram Premium</h1>
+        <p class="lead text-white">Encuentra los mejores grupos activos. Los anclados aparecen primero ⭐</p>
+    </div>
+</div>
+
+{% if groups|length == 0 %}
+    <div class="alert alert-info text-center">
+        <h4>Aún no hay grupos aprobados 😔</h4>
+        <a href="{{ url_for('submit') }}" class="btn btn-primary btn-lg mt-3">¡Publica el primero!</a>
+    </div>
+{% else %}
+    <div class="row justify-content-center">
+        {% for group in groups %}
+            <div class="col-md-6 col-lg-4 mb-5">
+                <div class="card h-100 shadow-lg border-0 {% if group.pinned %}pinned{% endif %}">
+                    <!-- Foto de perfil -->
+                    <div class="text-center pt-4">
+                        {% if group.profile_photo %}
+                            <img src="{{ group.profile_photo }}" alt="Foto de {{ group.name }}"
+                                class="rounded-circle border border-4 border-white shadow"
+                                style="width: 140px; height: 140px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle bg-gradient d-flex align-items-center justify-content-center mx-auto shadow"
+                                style="width: 140px; height: 140px; background: linear-gradient(135deg, #667eea, #764ba2);">
+                                <span class="text-white fs-1 fw-bold">{{ group.name[0]|upper }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Contenido -->
+                    <div class="card-body text-center pb-5">
+                        {% if group.pinned %}
+                            <span class="badge badge-pinned mb-3 px-4 py-2">⭐ Anclado</span>
+                        {% endif %}
+                        <h5 class="card-title mt-3 fw-bold">{{ group.name }}</h5>
+                        <p class="text-muted small mb-2">
+                            👥 
+                            {% if group.member_count == "Desconocido" %}
+                                Grupo privado
+                            {% else %}
+                                {{ group.member_count }} miembros
+                            {% endif %}
+                        </p>
+                        <!-- País: solo la bandera -->
+                        <p class="text-muted small mb-2">
+                            {% if group.country == "Global" %}
+                                🌍 Global
+                            {% else %}
+                                {% set countries = load_json(url_for('static', filename='json/countries.json')) %}
+                                {% set flag = namespace(found="") %}
+                                {% for country in countries %}
+                                    {% if country.name == group.country %}
+                                        {% set flag.found = country.emoji %}
+                                    {% endif %}
+                                {% endfor %}
+                                {{ flag.found }}
+                            {% endif %}
+                        </p>
+                        <p class="card-text text-muted px-3">{{ group.description | truncate(150) }}</p>
+                        <!-- Botón corregido -->
+                        <button type="button" class="btn btn-primary btn-lg px-5 mt-3 shadow join-button"
+                                data-link="{{ group.link }}"
+                                data-adult="{{ 'true' if group.category == 'Adulto' else 'false' }}">
+                            Unirse ahora 🚀
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginación -->
+    {% if pagination.pages > 1 %}
+    <nav aria-label="Paginación" class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('index', page=pagination.prev_num, category=category, q=q) }}">« Anterior</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">« Anterior</span>
+                </li>
+            {% endif %}
+
+            {% for page_num in pagination.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2) %}
+                {% if page_num %}
+                    {% if page_num == pagination.page %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('index', page=page_num, category=category, q=q) }}">{{ page_num }}</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('index', page=pagination.next_num, category=category, q=q) }}">Siguiente »</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Siguiente »</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+{% endif %}
+
+<!-- Modal para grupos +18 -->
+<div class="modal fade" id="adultModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">🔞 Contenido restringido (+18)</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="lead">Este grupo contiene contenido exclusivo para mayores de 18 años.</p>
+                <p class="fw-bold text-danger">Si no eres mayor de 18 años, no continúes.</p>
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="ageCheck">
+                    <label class="form-check-label fw-bold" for="ageCheck">
+                        Sí, soy mayor de 18 años
+                    </label>
+                </div>
+                <button class="btn btn-success btn-lg" id="continueBtn" disabled>Continuar al grupo</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const adultModal = new bootstrap.Modal(document.getElementById('adultModal'));
+        let joinUrl = '';
+
+        document.querySelectorAll('.join-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                joinUrl = this.dataset.link;
+                const isAdult = this.dataset.adult === 'true';
+
+                if (isAdult) {
+                    adultModal.show();
+                } else {
+                    window.open(joinUrl, '_blank');
+                }
+            });
+        });
+
+        const ageCheck = document.getElementById('ageCheck');
+        const continueBtn = document.getElementById('continueBtn');
+
+        ageCheck.addEventListener('change', function() {
+            continueBtn.disabled = !this.checked;
+        });
+
+        continueBtn.addEventListener('click', function() {
+            if (ageCheck.checked) {
+                window.open(joinUrl, '_blank');
+                adultModal.hide();
+            }
+        });
+
+        adultModal._element.addEventListener('hidden.bs.modal', function () {
+            ageCheck.checked = false;
+            continueBtn.disabled = true;
+            joinUrl = '';
+        });
+    });
+</script>
+
+{% endblock %}
