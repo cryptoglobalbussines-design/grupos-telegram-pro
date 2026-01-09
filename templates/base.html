@@ -28,12 +28,9 @@
         </div>
     </nav>
 
-    <!-- Espacio para la navbar fija -->
-    <div style="height: 80px;"></div>
-
     <!-- Contenido principal -->
-    <div class="container mt-5">
-        <!-- Mensajes flash -->
+    <div class="container mt-5   ">
+        <!-- Mensajes flash (éxito, error, etc.) -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -48,7 +45,11 @@
         {% block content %}{% endblock %}
     </div>
 
-    <!-- Botones flotantes (juntos, modo oscuro arriba, publicar abajo) -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+
+ <!-- Botones flotantes (juntos, modo oscuro arriba, publicar abajo) -->
     <div class="position-fixed bottom-0 end-0 p-4" style="z-index: 1000;">
         <div class="d-flex flex-column align-items-end gap-3">
             <!-- Modo oscuro (arriba) -->
@@ -63,30 +64,28 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const toggle = document.getElementById('darkModeToggle');
+    const body = document.body;
 
-    <!-- Script modo oscuro -->
-    <script>
-        const toggle = document.getElementById('darkModeToggle');
-        const body = document.body;
+    // Cargar preferencia guardada
+    if (localStorage.getItem('darkMode') === 'enabled') {
+        body.classList.add('dark-mode');
+        toggle.innerHTML = '☀️';
+    }
 
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            body.classList.add('dark-mode');
+    // Cambiar modo al hacer clic
+    toggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        
+        if (body.classList.contains('dark-mode')) {
             toggle.innerHTML = '☀️';
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            toggle.innerHTML = '🌙';
+            localStorage.setItem('darkMode', 'disabled');
         }
-
-        toggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            
-            if (body.classList.contains('dark-mode')) {
-                toggle.innerHTML = '☀️';
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                toggle.innerHTML = '🌙';
-                localStorage.setItem('darkMode', 'disabled');
-            }
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
