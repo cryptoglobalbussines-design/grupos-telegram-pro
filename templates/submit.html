@@ -41,10 +41,34 @@
     </select>
     <small class="text-muted">Si no eliges, aparecerá como Global</small>
 </div>
-    <div class="mb-3">
-        <label class="form-label">Descripción (¿por qué deberían unirse?)</label>
-        <textarea name="description" class="form-control" rows="5" required></textarea>
-    </div>
+    
+<div class="mb-3">
+    <label class="form-label">Descripción breve (¿por qué deberían unirse?)</label>
+    <textarea name="description" class="form-control" rows="3" maxlength="150" id="descriptionTextarea" placeholder="Ej: Grupo activo de memes diarios con +1K miembros" required></textarea>
+    <small class="text-muted d-block mt-1">
+        Caracteres restantes: <span id="charCount">150</span>
+    </small>
+</div>
+
+<script>
+    const textarea = document.getElementById('descriptionTextarea');
+    const charCount = document.getElementById('charCount');
+
+    textarea.addEventListener('input', function() {
+        const remaining = 150 - this.value.length;
+        charCount.textContent = remaining;
+        
+        // Cambia color si quedan pocos
+        if (remaining < 20) {
+            charCount.style.color = 'red';
+        } else if (remaining < 50) {
+            charCount.style.color = 'orange';
+        } else {
+            charCount.style.color = '';
+        }
+    });
+</script>
+
     <div class="mb-3">
         <label class="form-label">Tu correo electrónico</label>
         <input type="email" name="email" class="form-control" required>
