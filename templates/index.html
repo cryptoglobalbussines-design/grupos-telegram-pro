@@ -17,7 +17,7 @@
 <!-- Filtros de categoría -->
 <div class="text-center mb-4">
     <div class="btn-group" role="group" aria-label="Filtros de categoría">
-        <a href="{{ url_for('index') }}" class="btn btn-outline-light {% if not category %}active{% endif %}">Todos</a>
+         <a href="{{ url_for('index', category='General') }}" class="btn btn-outline-light {% if category == 'General' %}active{% endif %}">General</a>
         <a href="{{ url_for('index', category='Crypto') }}" class="btn btn-outline-light {% if category == 'Crypto' %}active{% endif %}">Crypto</a>
         <a href="{{ url_for('index', category='Memes') }}" class="btn btn-outline-light {% if category == 'Memes' %}active{% endif %}">Memes</a>
         <a href="{{ url_for('index', category='Noticias') }}" class="btn btn-outline-light {% if category == 'Noticias' %}active{% endif %}">Noticias</a>
@@ -25,8 +25,8 @@
         <a href="{{ url_for('index', category='Tecnología') }}" class="btn btn-outline-light {% if category == 'Tecnología' %}active{% endif %}">Tecnología</a>
         <a href="{{ url_for('index', category='Música') }}" class="btn btn-outline-light {% if category == 'Música' %}active{% endif %}">Música</a>
         <a href="{{ url_for('index', category='Cine') }}" class="btn btn-outline-light {% if category == 'Cine' %}active{% endif %}">Cine</a>
-        <a href="{{ url_for('index', category='Adulto') }}" class="btn btn-outline-light {% if category == 'Adulto' %}active{% endif %}">Adulto</a>
-        <a href="{{ url_for('index', category='General') }}" class="btn btn-outline-light {% if category == 'General' %}active{% endif %}">General</a>
+        <a href="{{ url_for('index', category='Adulto') }}" class="btn btn-outline-light {% if category == 'Adulto' %}active{% endif %}">Adulto</a>       
+        <a href="{{ url_for('index') }}" class="btn btn-outline-light {% if not category %}active{% endif %}">Todos</a>
     </div>
 </div>
 

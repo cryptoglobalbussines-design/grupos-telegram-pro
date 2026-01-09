@@ -181,3 +181,7 @@ body.dark-mode .form-control {
 .card {
     width: 100%;
 }
+
+body {
+    padding-top: 80px; /* Espacio para la navbar fija */
+}
