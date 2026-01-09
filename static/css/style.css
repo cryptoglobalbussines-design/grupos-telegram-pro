@@ -91,3 +91,93 @@ body.dark-mode .form-control {
     border-color: #34495e;
     color: white;
 }
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .card {
+        margin: 0 auto;
+        max-width: 95%;
+    }
+
+    .join-button {
+        width: 100%;
+        font-size: 1.1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    h5.card-title {
+        font-size: 1.2rem;
+    }
+
+    .text-muted small {
+        font-size: 0.9rem;
+    }
+
+    .badge-pinned {
+        font-size: 0.8rem;
+    }
+}
+
+/* Para que las tarjetas no se desborden */
+.row.justify-content-center {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.col-md-6, .col-lg-4 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .container, .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .row.justify-content-center {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .col-md-6, .col-lg-4 {
+        padding-left: 10px;
+        padding-right: 10px;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .btn-group {
+        flex-wrap: wrap;
+    }
+
+    .btn-group .btn {
+        flex: 1 1 auto;
+        margin-bottom: 5px;
+    }
+
+    .join-button {
+        width: 100%;
+    }
+
+    h1.display-4 {
+        font-size: 2.5rem;
+    }
+
+    .lead {
+        font-size: 1rem;
+    }
+}
+
+/* Para que las tarjetas no se desborden */
+.card {
+    width: 100%;
+}
